@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Socket io client</title>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body>
+<script>
+
+    const socket = io('/mynamespace')
+
+    socket.on('hello', (arg) => {
+        console.log('connected', arg)
+    })
+
+    socket.on('disconnect', () => {
+        console.log('disconnect', socket.id) // undefined
+    })
+
+    function submit() {
+        const txt = document.getElementById('input').value
+        socket.emit('message', txt)
+    }
+
+</script>
+
+<input id="input" type="text"/>
+<button onclick="submit()">Submit</button>
+
+</body>
+</html>
