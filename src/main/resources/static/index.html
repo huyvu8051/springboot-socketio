@@ -18,9 +18,12 @@
         console.log('disconnect', socket.id) // undefined
     })
 
-    function submit() {
+    const submit = () => {
         const txt = document.getElementById('input').value
-        socket.emit('message', txt)
+        socket.emit('message', {
+            author: 'client',
+            msg: txt
+        })
     }
 
 </script>
