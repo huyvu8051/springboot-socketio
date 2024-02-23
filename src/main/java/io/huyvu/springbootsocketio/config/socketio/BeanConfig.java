@@ -7,7 +7,6 @@ package io.huyvu.springbootsocketio.config.socketio;
 import io.huyvu.springbootsocketio.util.JsonUtils;
 import io.socket.engineio.server.EngineIoServer;
 import io.socket.engineio.server.EngineIoServerOptions;
-import io.socket.socketio.server.SocketIoNamespace;
 import io.socket.socketio.server.SocketIoServer;
 import io.socket.socketio.server.SocketIoSocket;
 import org.json.JSONObject;
@@ -35,13 +34,22 @@ public class BeanConfig {
             var socket = (SocketIoSocket) args[0];
             System.out.println("Client " + socket.getId() + " (" + socket.getInitialHeaders().get("remote_addr") + ") has connected.");
 
+            var connectData = socket.getConnectData();
+            if (connectData instanceof JSONObject jsonObject) {
+                var authorization = jsonObject.get("token");
+                // Xử lý token để lấy thông tin session
+                jsonObject.put("uId", authorization);
+            }
+
             socket.on("message", args1 -> {
 
                 JSONObject o = (JSONObject) args1[0];
 
                 var messageVo = JsonUtils.toPojoObj(o, MessageVo.class);
 
-                System.out.println("[Client " + socket.getId() + "] " + messageVo);
+                var uId = SocketUtils.getUserId(socket);
+
+                System.out.println("[Client " + socket.getId() + "][" + uId + "]" + messageVo);
                 socket.send("hello", JsonUtils.toJsonObj(new MessageVo("Server", "Heo khô đi những kỉ niệm xưa kia")));
             });
         });
