@@ -38,6 +38,10 @@ public class BeanConfig {
             if (connectData instanceof JSONObject jsonObject) {
                 var authorization = jsonObject.get("token");
                 // Xử lý token để lấy thông tin session
+                /*if(authorization == null){
+                    socket.disconnect(true);
+                }*/
+
                 jsonObject.put("uId", authorization);
             }
 
